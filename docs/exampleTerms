@@ -1,0 +1,87 @@
+
+# common boolean functions
+
+not := fun x => if x false true
+and := fun x y => if x y x
+or := fun x y => if x x y
+
+# some useful combinators
+
+id := fun x => x
+K := fun x y => x
+comp := fun f g x => f (g x)
+curry := fun f x y => f [x,y]
+uncurry := fun f p => f (p1 p) (p2 p)
+extract := case id id
+switch := fun f x y => f y x
+
+# arithmetical operations
+
+# predecessor, defined using Kleene's dentist trick
+P := fun n => p1 (iter n (fun p => [p2 p, S (p2 p)]) [0,0])
+
+# the isZero function. Satisfies isZ 0 = true, isZ n+1 = false
+isZ := fun x => iter x (K false) true
+
+nonZ := comp not isZ
+
+plus := fun x => iter x S
+mult := fun x y => iter x (plus y) 0
+
+# exp m n = m^n
+exp := fun x y => iter y (mult x) 1
+
+even := fun n => iter n not true
+odd := comp not even
+
+# full recursor.  Rec 0 f a = a; Rec n+1 f a = f (Rec n f a) n.  Useful for when you need to "remember" n as an argument
+rec := fun n f a => p2 (iter n (fun p => [S (p1 p), f (p2 p) (p1 p)]) [0,a])
+
+# factorial
+fact := fun n => rec n (fun x y => mult x (S y)) 1
+
+# halving function (rounding down) defined using sum types
+half := fun n => extract (iter n (case i2 (comp i1 S)) (i1 0))
+
+# Cantor's pairing function with inverse
+cantor := uncurry (fun x y => plus (half (mult (plus x y) (S (plus x y)))) x)
+uncantor := fun n => iter n (fun p => if (isZ (p2 p)) [0,S (p1 p)] [S (p1 p) , P (p2 p)]) [0,0]
+
+# equality for naturals
+eq := fun n => iter n (fun f m => and (nonZ m) (f (P m))) isZ
+
+# less than or equal comparison
+leq := fun n => iter n (fun f m => and (nonZ m) (f (P m))) (K true)
+
+geq := switch leq
+
+# strict less than
+lt := fun n => iter n (fun f m => and (nonZ m) (f (P m))) nonZ
+
+gt := switch lt
+
+# exist n p returns (i1 m) if m is the largest number strictly below n satisfying p, and (i2 tt) if no such number exists
+exist := fun n => rec n (fun q x p => if (p x) (i1 x) (q p)) (K (i2 tt))
+
+# boolean-valued version of exist
+existB := fun n p => case (K true) (K false) (exist n p)
+
+div := fun m n => existB (S n) (fun p => eq (mult p m) n)
+
+prime := fun n => case (eq 1) (K false) (exist n (fun m => div m n))
+
+# Church booleans and numerals
+
+cf := fun x y => y
+ct := fun x y => x
+
+cand := fun b1 b2 x y => b1 (b2 x y) y
+cor := fun b1 b2 x y => b1 x (b2 x y)
+cnot := fun b x y => b y x
+
+cnum := fun n f x => iter n f x
+
+cS := fun n f x => f (n f x)
+cplus := fun m n f x => m f (n f x)
+cmult := fun m n f x => m (n f) x
+cisZ := fun n x y => n (fun z => y) x
