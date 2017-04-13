@@ -106,9 +106,3 @@ pprint_aux _ Case = "case"
 
 pprint :: Term -> String
 pprint = pprint_aux 0
-
-{-
-mpprint :: Maybe Term -> String
-mpprint Nothing = "Nothing"
-mpprint (Just t) = pprint t
--}
