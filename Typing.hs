@@ -138,3 +138,8 @@ maybeTy t = do
                 subs <- unify eqs
                 s <- lookup (Var 0) subs
                 return (simpleTy s)
+
+pty :: Term -> String
+pty t = case maybeTy t of
+        Nothing -> "nope."
+        Just s -> typprint (simpleTy s)

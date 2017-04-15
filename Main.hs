@@ -19,6 +19,7 @@ css = $(embedFile "docs/css.css")
 
 main :: IO()
 main = mainWidgetWithCss css $ do
+    el "title" $ text "System T"
     elClass "h1" "mainTitle" $ text "System T Interpreter"
     el "div" $ do
         rec stuff <- foldDyn (\t _ -> fullUpdate t) (reservedTerms , []) update

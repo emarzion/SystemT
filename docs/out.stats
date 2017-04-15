@@ -12,7 +12,7 @@ ghcjs-dom-0.2.3.1-L0IRwwiUDix9xezZ47SisT:142838
 ghcjs-prim-0.1.0.0-IFhsWclGfLr1HfhUvIVylA:10712
 integer-gmp:             72147
 lens-4.14-EIf31DZS8gN9odjDXxvGrT:424
-main:                    205826
+main:                    206717
 parsec-3.1.11-BDjidlpvpG416Z07S0uKAp:477655
 prim-uniq-0.1.0.1-Lbg7Imujn019qkjLCx908j:2786
 primitive-0.6.1.0-PBvNfnj6B81wEvI5CBk0H:809
@@ -171,9 +171,9 @@ lens-4.14-EIf31DZS8gN9odjDXxvGrT
 main
     InputStuff:                         13148
     Lang:                               21269
-    Main:                               53528
-    Normalize:                          14053
-    Parser:                             39377
+    Main:                               54638
+    Normalize:                          14015
+    Parser:                             39196
     Pprinter:                           29361
     Typing:                             35090
 
@@ -241,5 +241,5 @@ transformers-0.5.2.0-Lvs3wlJMkpyLRFNHJ8pmeB
 
 
 
-packed metadata: 731602
+packed metadata: 726742
 
