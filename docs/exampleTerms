@@ -1,4 +1,3 @@
-
 # common boolean functions
 
 not := fun x => if x false true
@@ -17,6 +16,9 @@ switch := fun f x y => f y x
 
 # arithmetical operations
 
+# full recursor.  rec 0 f a = a; rec n+1 f a = f (rec n f a) n.  Useful for when you need to "remember" n as an argument
+rec := fun n f a => p2 (iter n (fun p => [S (p1 p), f (p2 p) (p1 p)]) [0,a])
+
 # predecessor, defined using Kleene's dentist trick
 P := fun n => p1 (iter n (fun p => [p2 p, S (p2 p)]) [0,0])
 
@@ -26,6 +28,7 @@ isZ := fun x => iter x (K false) true
 nonZ := comp not isZ
 
 plus := fun x => iter x S
+monus := fun x y => iter y P x
 mult := fun x y => iter x (plus y) 0
 
 # exp m n = m^n
@@ -33,9 +36,6 @@ exp := fun x y => iter y (mult x) 1
 
 even := fun n => iter n not true
 odd := comp not even
-
-# full recursor.  Rec 0 f a = a; Rec n+1 f a = f (Rec n f a) n.  Useful for when you need to "remember" n as an argument
-rec := fun n f a => p2 (iter n (fun p => [S (p1 p), f (p2 p) (p1 p)]) [0,a])
 
 # factorial
 fact := fun n => rec n (fun x y => mult x (S y)) 1
@@ -69,19 +69,3 @@ existB := fun n p => case (K true) (K false) (exist n p)
 div := fun m n => existB (S n) (fun p => eq (mult p m) n)
 
 prime := fun n => case (eq 1) (K false) (exist n (fun m => div m n))
-
-# Church booleans and numerals
-
-cf := fun x y => y
-ct := fun x y => x
-
-cand := fun b1 b2 x y => b1 (b2 x y) y
-cor := fun b1 b2 x y => b1 x (b2 x y)
-cnot := fun b x y => b y x
-
-cnum := fun n f x => iter n f x
-
-cS := fun n f x => f (n f x)
-cplus := fun m n f x => m f (n f x)
-cmult := fun m n f x => m (n f) x
-cisZ := fun n x y => n (fun z => y) x

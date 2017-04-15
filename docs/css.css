@@ -2,9 +2,17 @@
 left {
     float: left;
     width: 55%;
+    text-align: center;
 }
 
 right {
     float: right;
     width: 45%;
+    align-items: center;
 }   
+
+p {
+    max-width: 80%;
+}
+
+h1 { text-align: center; }
