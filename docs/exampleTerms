@@ -30,22 +30,10 @@ nonZ := comp not isZ
 plus := fun x => iter x S
 monus := fun x y => iter y P x
 mult := fun x y => iter x (plus y) 0
-
-# exp m n = m^n
 exp := fun x y => iter y (mult x) 1
 
 even := fun n => iter n not true
 odd := comp not even
-
-# factorial
-fact := fun n => rec n (fun x y => mult x (S y)) 1
-
-# halving function (rounding down) defined using sum types
-half := fun n => extract (iter n (case i2 (comp i1 S)) (i1 0))
-
-# Cantor's pairing function with inverse
-cantor := uncurry (fun x y => plus (half (mult (plus x y) (S (plus x y)))) x)
-uncantor := fun n => iter n (fun p => if (isZ (p2 p)) [0,S (p1 p)] [S (p1 p) , P (p2 p)]) [0,0]
 
 # equality for naturals
 eq := fun n => iter n (fun f m => and (nonZ m) (f (P m))) isZ
@@ -59,6 +47,16 @@ geq := switch leq
 lt := fun n => iter n (fun f m => and (nonZ m) (f (P m))) nonZ
 
 gt := switch lt
+
+# factorial
+fact := fun n => rec n (fun x y => mult x (S y)) 1
+
+# halving function (rounding down) defined using sum types
+half := fun n => extract (iter n (case i2 (comp i1 S)) (i1 0))
+
+# Cantor's pairing function with inverse
+cantor := uncurry (fun x y => plus (half (mult (plus x y) (S (plus x y)))) x)
+uncantor := fun n => iter n (fun p => if (isZ (p2 p)) [0,S (p1 p)] [S (p1 p) , P (p2 p)]) [0,0]
 
 # exist n p returns (i1 m) if m is the largest number strictly below n satisfying p, and (i2 tt) if no such number exists
 exist := fun n => rec n (fun q x p => if (p x) (i1 x) (q p)) (K (i2 tt))
