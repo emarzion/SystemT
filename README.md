@@ -1,6 +1,10 @@
 # An interpreter for Gödel's System T
 
+Try in browser [here.](https://emarzion.github.io/SystemT/)
+
 System T is a system of arithmetic originally formulated by Gödel in order to study the computational content of proofs in Heyting Arithmetic.  System T extends the typical notion of a primitive recursive function to the entire hierarchy of finite types, although it also defines more number-theoretic functions than the traditional primitive recursive functions (for instance, the Ackermann function is definable in System T).
+
+To read more about System T, chapter 7 of [Proofs and Types](http://www.paultaylor.eu/stable/prot.pdf) is a nice resource.
 
 ## Syntax
 
