@@ -29,28 +29,14 @@ itemAt :: Int -> [a] -> Maybe a
 itemAt _ [] = Nothing
 itemAt 0 (x:_) = Just x
 itemAt n (_:xs) = itemAt (n-1) xs
-{-
-vars :: Ty -> [Int]
-vars (Var v)       = [v]
-vars (Arrow s1 s2) = union (vars s1) (vars s2)
-vars (Prod s1 s2)  = union (vars s1) (vars s2)
-vars (Sum s1 s2)   = union (vars s1) (vars s2)
-vars _             = []
--}
+
 contains :: Int -> Ty -> Bool
 contains n (Var m)       = n == m
 contains n (Arrow s1 s2) = (contains n s1) || (contains n s2)
 contains n (Prod s1 s2)  = (contains n s1) || (contains n s2)
 contains n (Sum s1 s2)   = (contains n s1) || (contains n s2)
 contains _ _             = False
-{-
-tsub :: (Int,Ty) -> Ty -> Ty
-tsub (n,s) (Var m) = if (m == n) then s else (Var m)
-tsub p (Arrow s1 s2) = Arrow (tsub p s1) (tsub p s2)
-tsub p (Prod s1 s2) = Prod (tsub p s1) (tsub p s2)
-tsub p (Sum s1 s2) = Sum (tsub p s1) (tsub p s2)
-tsub _ s = s
--}
+
 fpair :: (a -> a -> a) -> (b -> b -> b) -> (a,b) -> (a,b) -> (a,b)
 fpair f g (a1,b1) (a2,b2) = (f a1 a2,g b1 b2)
 
@@ -60,10 +46,7 @@ didsub p (Arrow s1 s2) = fpair (||) Arrow (didsub p s1) (didsub p s2)
 didsub p (Prod s1 s2) = fpair (||) Prod (didsub p s1) (didsub p s2)
 didsub p (Sum s1 s2) = fpair (||) Sum (didsub p s1) (didsub p s2)
 didsub p s = (False,s)
-{-
-eqsub :: (Int,Ty) -> [(Ty,Ty)] -> [(Ty,Ty)]
-eqsub p = map (\(s1,s2) -> (tsub p s1, tsub p s2))
--}
+
 fstof3 :: (a,b,c) -> a
 fstof3 (a,_,_) = a
 
@@ -155,85 +138,3 @@ maybeTy t = do
                 subs <- unify eqs
                 s <- lookup (Var 0) subs
                 return (simpleTy s)
-
-pty :: Term -> String
-pty t = case maybeTy t of
-        Nothing -> "nope."
-        Just s -> typprint (simpleTy s)
-
-test :: Term
-test = Lam (Lam (Lam (App (Ind 3) (App (App Pair (Ind 2)) (Ind 1)))))
-
-test2 :: Term
-test2 = App test Pr2
-
-test3 :: Term--
-test3 = Lam (Lam (App (App (Ind 2) (App Pr1 (Ind 1))) (App Pr2 (Ind 1))))
-
-test4 :: Term 
-test4 = Lam (Lam (Lam (App (Ind 3) (App (Ind 2) (Ind 1)))))
-
-test5 :: Term
-test5 = App (App Case I2) I1
-
-test6 :: Term
-test6 = Lam (Lam (App (Ind 2) (App (Ind 1) (Ind 2))))
-
-test7 :: Term --
-test7 = Lam (App (App Pair (App Pr2 (Ind 1))) (App Pr1 (Ind 1)))
-
-test8 :: Term--
-test8 = Lam (App (App Iter (Ind 1)) test7)
-
-test9 :: Term--
-test9 = App (App Iter (LitN 6)) test7
-
-idd :: Term
-idd = Lam (Ind 1)
-
-test10 :: Term
-test10 = Lam (App (App  (App Case idd) idd) (Ind 1))
-
-test11 :: Term
-test11 = Lam (App (App Iter (Ind 1)) (Lam (Ind 2)))
-
-test12 :: Term
-test12 = App (App Iter (LitN 6)) I2
-
-test13 :: Term
-test13 = App test4 test4
-
-test14 :: Term
-test14 = Lam (App (App Pair (App Pr2 (Ind 1))) (App Succ (App Pr1 (Ind 1))))
-
-test15 :: Term
-test15 = Lam (Lam (Lam (App (App (Ind 3) (Ind 1)) (Ind 2))))
-
-test16 :: Term
-test16 = Lam (App (App Pair t1) t2)
-
-t1 :: Term
-t1 = Lam (App Pr1 (App (Ind 2) (Ind 1)))
-
-t2 :: Term
-t2 = Lam (App Pr2 (App (Ind 2) (Ind 1)))
-
-test17 :: Term
-test17 = Lam (Lam (App (App Pair t3) t4))
-
-t3 = App (App Pr1 (Ind 2)) (Ind 1)
-t4 = App (App Pr2 (Ind 2)) (Ind 1)
-
---test4 is comp
-
-test18 = Lam (App (App Pair u1) u2)
-
-u1 = App (App test4 (Ind 1)) I1
-u2 = App (App test4 (Ind 1)) I2
-
-test19 = Lam (App (App Case v1) v2)
-
-v1 = App Pr1 (Ind 1)
-v2 = App Pr2 (Ind 1)
-
-test20 = Lam (App (App Pair (Ind 1)) (Ind 1))
