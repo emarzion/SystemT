@@ -101,7 +101,7 @@ To get around this, we define the recursor, `rec : N -> (a -> N -> a) -> a -> a`
 rec 0 f a   = a
 rec n+1 f a = f (rec n f a) n
 ```
-The general use case for `rec` is when we wish to inductively define a function `f : N -> a` in a way where both the function's previous value and the value of `n` are needed at the inductive step.  Specifically, if `f` is specified by
+We generally want to use `rec` when defining a function `f : N -> a` in a way where both the function's previous value and the value of `n` are needed at the inductive step.  Specifically, if `f` is specified by
 
 ```
 f 0   = t
